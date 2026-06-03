@@ -1,0 +1,28 @@
+{
+  "seed": 42,
+  "tag": "full",
+  "mini": false,
+  "splits": [
+    {
+      "split": "train",
+      "slides": 720,
+      "LUAD": 357,
+      "LUSC": 363,
+      "patients": 650
+    },
+    {
+      "split": "val",
+      "slides": 144,
+      "LUAD": 72,
+      "LUSC": 72,
+      "patients": 139
+    },
+    {
+      "split": "test",
+      "slides": 161,
+      "LUAD": 85,
+      "LUSC": 76,
+      "patients": 142
+    }
+  ]
+}

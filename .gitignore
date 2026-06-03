@@ -1,0 +1,27 @@
+# Large data — distributed via Google Drive, never committed
+*.h5
+*.svs
+*.ndpi
+*.zip
+
+# Logs — kept locally, not pushed
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# Scratch
+cptac_tmp/
+cache/
+
+# Secrets
+token.txt
+*.key
+*credentials*
+
+# OS
+.DS_Store
+Thumbs.db

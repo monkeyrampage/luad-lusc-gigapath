@@ -1,0 +1,90 @@
+{
+  "selected": {
+    "high_LUAD": {
+      "file_id": "17cc1b48-e2d1-4601-b206-da3a10075589",
+      "patient_id": "TCGA-49-4488",
+      "label": "LUAD",
+      "pred": "LUAD",
+      "correct": true,
+      "prob": 0.0005,
+      "n_tiles": 5288,
+      "entropy": 1.7364,
+      "gini": 0.999,
+      "top10_pct": 1.0,
+      "max_attn": 0.379733
+    },
+    "high_LUSC": {
+      "file_id": "c7d2fc66-baeb-4138-99f3-ddae1100ceda",
+      "patient_id": "TCGA-56-5898",
+      "label": "LUSC",
+      "pred": "LUSC",
+      "correct": true,
+      "prob": 1.0,
+      "n_tiles": 308,
+      "entropy": 0.0082,
+      "gini": 0.9967,
+      "top10_pct": 1.0,
+      "max_attn": 0.999156
+    },
+    "moderate_LUAD": {
+      "file_id": "01bea133-7f27-40a6-8d4e-018da17accda",
+      "patient_id": "TCGA-J2-A4AE",
+      "label": "LUAD",
+      "pred": "LUAD",
+      "correct": true,
+      "prob": 0.0,
+      "n_tiles": 4181,
+      "entropy": 4.249,
+      "gini": 0.986,
+      "top10_pct": 0.9991,
+      "max_attn": 0.064889
+    },
+    "moderate_LUSC": {
+      "file_id": "dac76377-5786-4bdc-b546-41e9bb196512",
+      "patient_id": "TCGA-85-8664",
+      "label": "LUSC",
+      "pred": "LUSC",
+      "correct": true,
+      "prob": 1.0,
+      "n_tiles": 3341,
+      "entropy": 4.3753,
+      "gini": 0.9788,
+      "top10_pct": 0.9906,
+      "max_attn": 0.078144
+    },
+    "low_LUAD": {
+      "file_id": "8974796d-f014-4adc-b508-762cbd62adb5",
+      "patient_id": "TCGA-49-4514",
+      "label": "LUAD",
+      "pred": "LUAD",
+      "correct": true,
+      "prob": 0.0,
+      "n_tiles": 6582,
+      "entropy": 5.8585,
+      "gini": 0.9592,
+      "top10_pct": 0.9809,
+      "max_attn": 0.019392
+    },
+    "low_LUSC": {
+      "file_id": "b5b74bca-6e1f-4964-8b3c-1203ff967bb7",
+      "patient_id": "TCGA-66-2766",
+      "label": "LUSC",
+      "pred": "LUSC",
+      "correct": true,
+      "prob": 0.9999,
+      "n_tiles": 2174,
+      "entropy": 5.7866,
+      "gini": 0.8866,
+      "top10_pct": 0.8236,
+      "max_attn": 0.018148
+    }
+  },
+  "fids": [
+    "17cc1b48-e2d1-4601-b206-da3a10075589",
+    "c7d2fc66-baeb-4138-99f3-ddae1100ceda",
+    "01bea133-7f27-40a6-8d4e-018da17accda",
+    "dac76377-5786-4bdc-b546-41e9bb196512",
+    "8974796d-f014-4adc-b508-762cbd62adb5",
+    "b5b74bca-6e1f-4964-8b3c-1203ff967bb7"
+  ]
+}
