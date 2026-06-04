@@ -143,16 +143,44 @@ python3 train_intermediate.py --model all --tag full
 
 BoVW vocabulary size is `--bovw-k 256` (default), matching the paper.
 
-### 1.5 Test-set evaluation
+### 1.5 Test-set table and figures
 
 ```bash
 python3 evaluate.py --tag full
 ```
 
-Reproduces the TCGA test table (AUC/accuracy/F1 for every model). Reads the trained
-checkpoints and writes `results/logs/<model>_full/results.json`. Expected AUCs:
-XGBoost 0.606, RBF-SVM 0.574, MLP 0.608, PCA+SVM 0.662, BoVW 0.717, ResNet 0.976,
-MeanPool 0.981, Gated 0.985, ABMIL 0.988, Ensemble 0.990.
+The per-model test metrics are written at training time: `train.py`,
+`train_classical.py`, and `train_intermediate.py` each write
+`results/logs/<model>_full/results.json`. Those JSONs are committed in this repo.
+
+`evaluate.py` reads those committed `results.json` files and regenerates the TCGA
+test table and figures (ROC curves, training curves, confusion matrices, embedding
+PCA), and writes `results/figures/model_comparison_full.csv`. It does not retrain
+and does not read checkpoints, so it requires the `results.json` files to exist
+(they are committed; if you wiped `results/`, run the training scripts first).
+
+Expected test AUCs in the table: XGBoost 0.606, RBF-SVM 0.574, MLP 0.608,
+PCA+SVM 0.662, BoVW 0.717, ResNet 0.976, MeanPool 0.981, Gated 0.985, ABMIL 0.988,
+Ensemble 0.990.
+
+### 1.5b Recompute TCGA test metrics from checkpoints (no retraining)
+
+`evaluate.py` only displays stored numbers. To independently recompute the GigaPath
+models' TCGA *test* metrics from the trained weights, use `eval_checkpoint.py`. It
+loads `results/checkpoints/<model>_full/best.pt`, runs the repo's own test forward
+pass (the same `run_epoch` and data loader `train.py` uses), and prints AUC, accuracy,
+F1, and the confusion matrix. It trains nothing and writes nothing.
+
+```bash
+python3 eval_checkpoint.py --model abmil       --tag full
+python3 eval_checkpoint.py --model gated_abmil --tag full
+python3 eval_checkpoint.py --model meanpool_mlp --tag full
+```
+
+Expected (matches Table II and the Fig. 3 confusion matrices):abmil         TCGA test AUC 0.9878   Acc 0.9379   F1 0.9359   CM [[78,7],[3,73]]
+gated_abmil   TCGA test AUC 0.9848   Acc 0.9441   F1 0.9427   CM [[78,7],[2,74]]
+meanpool_mlp  TCGA test AUC 0.9807   Acc 0.9379   F1 0.9333   CM [[81,4],[6,70]]The classical baselines ship no checkpoints, so their test metrics are reproduced by
+reading the committed `results.json` (or by retraining via `train_classical.py`).
 
 ### 1.6 Bootstrap confidence intervals
 
