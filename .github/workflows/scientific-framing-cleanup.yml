@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - cleanup/scientific-framing
+  pull_request:
+    branches:
+      - main
 
 permissions:
   contents: write
