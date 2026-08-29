@@ -1,25 +1,42 @@
-# Large data — distributed via Google Drive, never committed
+# Large data — distributed separately, never committed
 *.h5
 *.svs
 *.ndpi
 *.zip
 
-# Logs — kept locally, not pushed
+# Logs and local runtime outputs
 *.log
 
 # Python
 __pycache__/
-*.pyc
-*.pyo
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
 .ipynb_checkpoints/
+build/
+dist/
 
-# Scratch
+# Virtual environments and local configuration
+.venv/
+venv/
+env/
+.env
+.env.*
+
+# Editors
+.vscode/
+.idea/
+
+# Scratch / downloaded data
 cptac_tmp/
 cache/
 
 # Secrets
-token.txt
 *.key
+*.pem
+token.txt
 *credentials*
 
 # OS
