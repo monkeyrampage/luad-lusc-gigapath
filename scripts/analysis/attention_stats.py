@@ -14,7 +14,7 @@ Saves ranked CSV and picks:
   - 2 low concentration   (1 LUAD, 1 LUSC) — diffuse attention
 
 Usage:
-  python3 attention_stats.py --tag full
+  python -m scripts.analysis.attention_stats --tag full
 """
 
 import argparse
@@ -182,7 +182,7 @@ def main():
     print(f"\nSelection saved: {sel_path}")
 
     print(f"\nRun heatmaps with:")
-    print(f"python3 attention_heatmap.py --tag {args.tag} --fids " +
+    print(f"python -m scripts.analysis.attention_heatmap --tag {args.tag} --fids " +
           " ".join(fids_for_heatmap))
 
 

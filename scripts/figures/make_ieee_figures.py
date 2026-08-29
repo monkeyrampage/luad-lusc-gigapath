@@ -10,7 +10,7 @@ Regenerates all project figures with IEEE-compliant settings:
   - Double column: 7.16" wide
 
 Usage:
-  python3 make_ieee_figures.py
+  python -m scripts.figures.make_ieee_figures
 """
 
 import os, sys, json, csv

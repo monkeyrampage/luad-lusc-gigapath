@@ -6,16 +6,16 @@ Supports all three models: abmil, gated_abmil, meanpool_mlp.
 
 Usage:
   # Mini experiment with ABMIL
-  python3 train.py --model abmil --tag mini
+  python -m scripts.training.train --model abmil --tag mini
 
   # Gated ABMIL
-  python3 train.py --model gated_abmil --tag mini
+  python -m scripts.training.train --model gated_abmil --tag mini
 
   # Mean pool baseline
-  python3 train.py --model meanpool_mlp --tag mini
+  python -m scripts.training.train --model meanpool_mlp --tag mini
 
   # Full dataset
-  python3 train.py --model abmil --tag full --train-csv splits/train.csv ...
+  python -m scripts.training.train --model abmil --tag full --train-csv splits/train.csv ...
 """
 
 import argparse

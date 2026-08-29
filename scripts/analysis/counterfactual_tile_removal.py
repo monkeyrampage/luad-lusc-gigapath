@@ -21,7 +21,7 @@ Output:
   results/logs/counterfactual/counterfactual_full.json
 
 Usage:
-  python3 counterfactual_tile_removal.py --tag full
+  python -m scripts.analysis.counterfactual_tile_removal --tag full
 """
 
 import argparse

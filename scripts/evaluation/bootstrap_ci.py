@@ -9,8 +9,8 @@ Outputs:
   results/figures/bootstrap_ci.png     — forest plot of AUC CIs
 
 Usage:
-  python3 bootstrap_ci.py --tag full --n-bootstrap 1000
-  python3 bootstrap_ci.py --tag mini --n-bootstrap 1000
+  python -m scripts.evaluation.bootstrap_ci --tag full --n-bootstrap 1000
+  python -m scripts.evaluation.bootstrap_ci --tag mini --n-bootstrap 1000
 """
 
 import argparse

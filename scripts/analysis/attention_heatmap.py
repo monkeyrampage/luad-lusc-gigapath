@@ -11,8 +11,8 @@ Outputs:
     attention_grid.png                  — multi-slide grid figure
 
 Usage:
-  python3 attention_heatmap.py --tag full --n-slides 6
-  python3 attention_heatmap.py --tag full --fids <fid1> <fid2>
+  python -m scripts.analysis.attention_heatmap --tag full --n-slides 6
+  python -m scripts.analysis.attention_heatmap --tag full --fids <fid1> <fid2>
 """
 
 import argparse
