@@ -121,7 +121,7 @@ export LUNG_WSI_DATA=/path/to/base
 cd project
 
 # Run external inference
-python3 cptac_inference.py --all-models
+python -m scripts.evaluation.cptac_inference --all-models
 ```
 
 Expected output:
@@ -160,31 +160,44 @@ Raw WSIs are not redistributed. TCGA slides are available from the **NCI Genomic
 
 ## Repository structure
 
+Executable research workflows live under `scripts/` and are grouped by purpose. Run them as Python modules from the repository root, e.g. `python -m scripts.training.train`.
+
 ```text
 project/
 ├── data/
-│   ├── dataset.py                  # MIL datasets and HDF5 loading
-│   └── splits.py                   # patient-level split generation
+│   ├── dataset.py                       # MIL datasets and HDF5 loading
+│   └── splits.py                        # patient-level split generation
 ├── models/
-│   └── model.py                    # ABMIL, Gated ABMIL, MeanPool MLP
-├── train.py                        # GigaPath MIL training
-├── train_classical.py              # classical feature baselines
-├── train_intermediate.py           # intermediate representation baselines
-├── evaluate.py                     # held-out test evaluation
-├── cptac_inference.py              # external CPTAC evaluation
-├── bootstrap_ci.py                 # bootstrap confidence intervals
-├── learning_curve.py               # performance vs training-set size
-├── counterfactual_tile_removal.py  # attention perturbation analysis
-├── attention_stats.py              # attention concentration statistics
-├── attention_heatmap.py            # spatial attention visualization
-├── make_ieee_figures.py            # publication-style figure generation
-├── cptac_download_and_extract.py   # CPTAC WSI → GigaPath embeddings
-├── splits/                         # exact train/validation/test definitions
+│   └── model.py                         # ABMIL, Gated ABMIL, MeanPool MLP
+├── scripts/
+│   ├── training/
+│   │   ├── train.py                     # GigaPath MIL training
+│   │   ├── train_classical.py           # classical feature baselines
+│   │   └── train_intermediate.py        # intermediate representation baselines
+│   ├── evaluation/
+│   │   ├── evaluate.py                  # held-out test evaluation
+│   │   ├── eval_checkpoint.py           # checkpoint-based TCGA test recomputation
+│   │   ├── cptac_inference.py           # external CPTAC evaluation
+│   │   ├── bootstrap_ci.py              # bootstrap confidence intervals
+│   │   └── learning_curve.py            # performance vs training-set size
+│   ├── analysis/
+│   │   ├── attention_stats.py           # attention concentration statistics
+│   │   ├── attention_heatmap.py         # spatial attention visualization
+│   │   └── counterfactual_tile_removal.py
+│   ├── figures/
+│   │   ├── make_attention_grid.py
+│   │   ├── make_cptac_figures.py
+│   │   ├── make_disagreement_attention_grid_v2.py
+│   │   ├── make_disagreement_grid_v3.py
+│   │   └── make_ieee_figures.py         # publication-style figure generation
+│   └── data_prep/
+│       └── cptac_download_and_extract.py # CPTAC WSI → GigaPath embeddings
+├── splits/                              # exact train/validation/test definitions
 ├── results/
-│   ├── checkpoints/                # trained model weights
-│   ├── logs/                       # metrics and training histories
-│   └── figures/                    # generated analysis figures
-├── REPRODUCE.md                    # detailed reproducibility guide
+│   ├── checkpoints/                    # trained model weights
+│   ├── logs/                           # metrics and training histories
+│   └── figures/                        # generated analysis figures
+├── REPRODUCE.md                        # detailed reproducibility guide
 ├── environment.yml
 └── requirements.txt
 ```
