@@ -127,4 +127,3 @@ dependencies:
       - tzdata==2026.2
       - urllib3==2.6.3
       - xgboost==3.2.0
-prefix: /home/kturkmeneli/miniconda3/envs/tcga_eval
