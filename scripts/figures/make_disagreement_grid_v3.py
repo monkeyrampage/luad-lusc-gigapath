@@ -4,14 +4,17 @@ make_disagreement_grid_v3.py
 IEEE-compliant disagreement thumbnail grid.
 7 slides, 2 rows x 4 cols layout.
 300 DPI, larger fonts, clean captions.
+
+Usage:
+  python -m scripts.figures.make_disagreement_grid_v3
 """
 
 import os
 from PIL import Image, ImageDraw, ImageFont
 
-_HERE = os.path.dirname(os.path.abspath(__file__))
-CLEAN_DIR = os.path.join(_HERE, "results/figures/disagreement_thumbnails/clean")
-OUT_PATH  = os.path.join(_HERE, "results/figures/disagreement_grid_v3.png")
+_PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+CLEAN_DIR = os.path.join(_PROJECT_ROOT, "results", "figures", "disagreement_thumbnails", "clean")
+OUT_PATH  = os.path.join(_PROJECT_ROOT, "results", "figures", "disagreement_grid_v3.png")
 
 SLIDES = [
     ("1365c2c0", "LUAD", 0.0001, 0.7733, "ABMIL",  773),
