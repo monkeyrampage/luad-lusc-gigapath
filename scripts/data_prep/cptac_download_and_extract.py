@@ -15,10 +15,10 @@ Outputs:
   embeddings/cptac_labels.csv
 
 Usage:
-  python3 cptac_download_and_extract.py --query-only   # just count slides
-  python3 cptac_download_and_extract.py --download-only # download without extracting
-  python3 cptac_download_and_extract.py                 # full pipeline
-  python3 cptac_download_and_extract.py --max-slides 10 # test with 10 slides
+  python -m scripts.data_prep.cptac_download_and_extract --query-only   # just count slides
+  python -m scripts.data_prep.cptac_download_and_extract --download-only # download without extracting
+  python -m scripts.data_prep.cptac_download_and_extract                 # full pipeline
+  python -m scripts.data_prep.cptac_download_and_extract --max-slides 10 # test with 10 slides
 """
 
 import argparse

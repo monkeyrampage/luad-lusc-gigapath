@@ -11,8 +11,8 @@ Models:
   - BoVW + SVM (Classical features — best classical baseline)
 
 Usage:
-  python3 learning_curve.py --tag full
-  python3 learning_curve.py --tag full --models abmil bovw
+  python -m scripts.evaluation.learning_curve --tag full
+  python -m scripts.evaluation.learning_curve --tag full --models abmil bovw
 """
 
 import argparse

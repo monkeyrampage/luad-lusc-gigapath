@@ -6,7 +6,7 @@ make_cptac_figures.py
 3. Per-class metrics table for CPTAC
 
 Usage:
-  python3 make_cptac_figures.py
+  python -m scripts.figures.make_cptac_figures
 """
 
 import json, os, csv, sys

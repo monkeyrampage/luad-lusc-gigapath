@@ -10,11 +10,11 @@ Models:
   4. ResNet18 MIL    — ImageNet pretrained, fine-tune FC, mean-pool MIL
 
 Usage:
-  python3 train_intermediate.py --tag mini
-  python3 train_intermediate.py --tag mini --model pca_svm
-  python3 train_intermediate.py --tag mini --model xgboost
-  python3 train_intermediate.py --tag mini --model bovw
-  python3 train_intermediate.py --tag mini --model resnet
+  python -m scripts.training.train_intermediate --tag mini
+  python -m scripts.training.train_intermediate --tag mini --model pca_svm
+  python -m scripts.training.train_intermediate --tag mini --model xgboost
+  python -m scripts.training.train_intermediate --tag mini --model bovw
+  python -m scripts.training.train_intermediate --tag mini --model resnet
 """
 
 import argparse

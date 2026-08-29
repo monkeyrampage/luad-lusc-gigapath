@@ -10,9 +10,9 @@ Outputs:
   results/figures/ieee/fig_cptac_roc.pdf
 
 Usage:
-  python3 cptac_inference.py
-  python3 cptac_inference.py --model gated_abmil
-  python3 cptac_inference.py --all-models
+  python -m scripts.evaluation.cptac_inference
+  python -m scripts.evaluation.cptac_inference --model gated_abmil
+  python -m scripts.evaluation.cptac_inference --all-models
 """
 
 import argparse

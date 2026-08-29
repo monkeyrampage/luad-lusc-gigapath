@@ -13,8 +13,8 @@ Outputs (in results/figures/):
   model_comparison.csv    — Full metrics table for all models
 
 Usage:
-  python3 evaluate.py --tag mini
-  python3 evaluate.py --tag full
+  python -m scripts.evaluation.evaluate --tag mini
+  python -m scripts.evaluation.evaluate --tag full
 """
 
 import argparse

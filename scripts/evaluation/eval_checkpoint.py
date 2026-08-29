@@ -1,12 +1,23 @@
-# side-door test scorer: load best.pt, run the repo's own run_epoch on the test set, print metrics.
-# trains nothing. writes nothing to results/ or checkpoints/. read-only on disk.
-import os, sys, argparse, torch
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+"""
+eval_checkpoint.py
+------------------
+Recompute held-out TCGA test metrics directly from a trained checkpoint.
+Trains nothing and writes nothing.
+
+Usage:
+  python -m scripts.evaluation.eval_checkpoint --model abmil --tag full
+"""
+
+import argparse
+import os
+
+import torch
 from sklearn.metrics import precision_score, recall_score, f1_score, confusion_matrix
 
-from train import run_epoch, get_paths, RESULTS_DIR
+from scripts.training.train import run_epoch, get_paths, RESULTS_DIR
 from data.dataset import get_gigapath_loaders
 from models.model import get_model
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -35,7 +46,7 @@ def main():
                       n_classes=2, dropout=cargs["dropout"]).to(device)
     model.load_state_dict(ckpt["state_dict"])
 
-    # the repo's own test forward pass — identical to train.py line 181
+    # the repo's own test forward pass — identical to train.py
     loss, auc, acc, probs, labels = run_epoch(model, test_loader, None, device, train=False)
     preds = [1 if p >= 0.5 else 0 for p in probs]
 
@@ -44,6 +55,7 @@ def main():
     print(f"  Acc: {acc:.4f}")
     print(f"  F1:  {f1_score(labels, preds, zero_division=0):.4f}")
     print(f"  CM:  {confusion_matrix(labels, preds).tolist()}")
+
 
 if __name__ == "__main__":
     main()

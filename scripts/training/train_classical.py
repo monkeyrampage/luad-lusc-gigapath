@@ -6,9 +6,9 @@ Trains classical feature baselines on HOG+LBP+GLCM embeddings.
   2. Classical MLP
 
 Usage:
-  python3 train_classical.py --tag mini
-  python3 train_classical.py --tag mini --model svm
-  python3 train_classical.py --tag mini --model mlp
+  python -m scripts.training.train_classical --tag mini
+  python -m scripts.training.train_classical --tag mini --model svm
+  python -m scripts.training.train_classical --tag mini --model mlp
 """
 
 import argparse
