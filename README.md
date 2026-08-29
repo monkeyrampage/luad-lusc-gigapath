@@ -1,22 +1,31 @@
-# Lung Cancer Subtype Classification: LUAD vs LUSC
+# Whole-Slide Lung Cancer Subtyping with GigaPath
 
-Benchmark of handcrafted features against the GigaPath pathology foundation model
-for classifying lung adenocarcinoma (LUAD) vs lung squamous cell carcinoma (LUSC)
-from whole-slide images (WSIs).
+**LUAD vs LUSC classification from whole-slide histopathology using pathology foundation-model embeddings and multiple-instance learning.**
 
-The headline result: attention-based MIL (ABMIL) over GigaPath embeddings reaches
-**AUC 0.988** on the TCGA test set and **0.959** on an external CPTAC cohort with no
-retraining. The best classical model (bag-of-visual-words + SVM) reaches only 0.717.
-The tile representation, not the aggregation method, drives performance.
+This repository benchmarks handcrafted image features against **GigaPath** representations for distinguishing lung adenocarcinoma (LUAD) from lung squamous cell carcinoma (LUSC). Models are trained on TCGA and evaluated on an external CPTAC cohort without retraining.
+
+### Key results
+
+- **TCGA test AUC:** 0.988 with ABMIL over GigaPath embeddings
+- **External CPTAC AUC:** 0.959 without retraining
+- **Best classical baseline AUC:** 0.717 with bag-of-visual-words + SVM
+- **Patient-level splitting:** no patient appears in more than one split
+- **External evaluation:** performance is retained across institution and acquisition-scale differences
+
+![TCGA and CPTAC performance comparison](results/figures/ieee/fig_bootstrap_tcga_vs_cptac.png)
+
+The central finding is that the **learned tile representation contributes substantially more to performance than the choice of downstream aggregation model**.
 
 ---
 
 ## Results
 
-### TCGA test set (161 slides)
+### TCGA test cohort
+
+Evaluation on 161 held-out TCGA slides:
 
 | Model | AUC | Accuracy | F1 |
-|---|---|---|---|
+|---|---:|---:|---:|
 | XGBoost (classical) | 0.606 | 0.553 | 0.514 |
 | RBF-SVM (classical) | 0.574 | 0.553 | 0.533 |
 | MLP (classical) | 0.608 | 0.596 | 0.552 |
@@ -26,148 +35,173 @@ The tile representation, not the aggregation method, drives performance.
 | MeanPool MLP (GigaPath) | 0.981 | 0.938 | 0.933 |
 | Gated ABMIL (GigaPath) | 0.985 | 0.944 | 0.943 |
 | **ABMIL (GigaPath)** | **0.988** | **0.938** | **0.936** |
-| Ensemble (3 GigaPath) | 0.990 | 0.944 | 0.942 |
+| Ensemble (3 GigaPath models) | 0.990 | 0.944 | 0.942 |
 
-### External validation: CPTAC (407 slides, zero-shot)
+### External validation on CPTAC
 
-| Model | TCGA AUC | CPTAC AUC | Drop | CPTAC Acc |
-|---|---|---|---|---|
+Zero-shot evaluation on 407 CPTAC slides, using the TCGA-trained models without retraining:
+
+| Model | TCGA AUC | CPTAC AUC | AUC drop | CPTAC accuracy |
+|---|---:|---:|---:|---:|
 | MeanPool MLP | 0.981 | 0.939 | 0.042 | 0.855 |
 | Gated ABMIL | 0.985 | 0.905 | 0.080 | 0.799 |
 | **ABMIL** | **0.988** | **0.959** | **0.029** | **0.894** |
 
-CPTAC was processed at 5x and TCGA at 10x, so this tests transfer across both
-institution and magnification.
+TCGA and CPTAC were processed at different effective magnifications (10x and 5x, respectively). The external result therefore reflects a combined shift in institution and image scale and should be interpreted accordingly.
 
 ---
 
-## What reproduces, and what does not
+## Method overview
 
-This repo ships **trained model checkpoints** and the **code**, but not the large
-data. There are three levels of reproduction:
+The pipeline operates on whole-slide images using tile-level representations followed by slide-level aggregation.
 
-**1. From cached embeddings (fast, fully reproducible here).**
-Everything downstream of the GigaPath embeddings: training every model, evaluation,
-bootstrap CIs, learning curves, counterfactual analysis, CPTAC inference, and all
-figures. The embeddings (HDF5) are downloaded separately (see below). This is what
-the Quick Start covers and runs in seconds to minutes on a CPU.
+1. **Tiling** — WSIs are divided into 224 × 224 image tiles with background filtering.
+2. **Representation** — each tile is encoded either with frozen GigaPath features (1536 dimensions) or handcrafted LBP + GLCM + HOG features (404 dimensions).
+3. **Aggregation** — tile representations are combined using mean pooling, attention-based MIL, gated attention MIL, or classical baselines.
+4. **Evaluation** — models are assessed with patient-level train/validation/test splits, external CPTAC validation, bootstrap confidence intervals, learning curves, and attention analyses.
 
-**2. From raw slides to embeddings (code included, not run instantly).**
-Going from raw WSIs to the HDF5 embeddings requires: the TCGA/CPTAC slides
-(re-downloadable from GDC and TCIA), the GigaPath model weights (gated, from
-HuggingFace), and a GPU. The extraction code is included but the intermediate tiles
-were not retained, so this step is documented rather than one-command. See
-`REPRODUCE.md`, Tier 2.
+### Experimental scale
 
-**3. GigaPath pretraining (out of scope).**
-The GigaPath foundation model itself is used as released. We do not retrain it.
-
-Full step-by-step for all three is in **`REPRODUCE.md`**.
+- **1,025 TCGA slides**
+- approximately **4.1 million tiles**
+- patient-level train/validation/test separation
+- all tiles used at test time
+- up to 500 randomly resampled tiles per slide during MIL training
+- AdamW optimization with cosine learning-rate scheduling and validation-AUC early stopping
 
 ---
 
-## Quick Start: verify the reported numbers
+## Reproducibility
 
-Reproduces the CPTAC table in seconds. CPU is fine; no GPU needed because the
-embeddings are precomputed.
+The repository contains source code, trained checkpoints, split definitions, evaluation outputs, and generated figures. Large image data and embedding files are distributed separately.
+
+### Tier 1 — Reproduce results from cached embeddings
+
+Given the provided HDF5 embeddings, the following analyses can be reproduced without processing raw WSIs:
+
+- model training and evaluation
+- TCGA test metrics
+- CPTAC inference
+- bootstrap confidence intervals
+- learning curves
+- attention statistics and heatmaps
+- counterfactual tile-removal analysis
+- publication figures
+
+### Tier 2 — Recreate embeddings from raw WSIs
+
+Raw TCGA/CPTAC slides can be re-downloaded from their original repositories and processed with the included extraction code. This requires GigaPath model weights and suitable GPU resources.
+
+### Tier 3 — Foundation-model pretraining
+
+GigaPath is used as a released pretrained pathology foundation model. Its original pretraining is outside the scope of this repository.
+
+Detailed instructions are available in [`REPRODUCE.md`](REPRODUCE.md).
+
+---
+
+## Quick start
+
+The fastest validation path reproduces the CPTAC inference results using precomputed embeddings. A CPU is sufficient for this step.
 
 ```bash
-# 1. clone the code
+# Clone the repository
 git clone https://github.com/monkeyrampage/luad-lusc-gigapath.git project
 
-# 2. download the embeddings (see "Data" below) into a sibling folder:
-#    <base>/
-#      embeddings/   <- the 3 .h5 + 2 .csv files
-#      project/      <- this repo
-
-# 3. minimal CPU environment
+# Create a minimal CPU environment
 conda create -n tcga_eval python=3.10 -y
 conda activate tcga_eval
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install numpy h5py scikit-learn matplotlib
 
-# 4. point at the data root and run
-export LUNG_WSI_DATA=/path/to/base      # the folder containing embeddings/ and project/
+# Point the code to the data root
+export LUNG_WSI_DATA=/path/to/base
 cd project
+
+# Run external inference
 python3 cptac_inference.py --all-models
 ```
 
 Expected output:
 
-```
+```text
 ABMIL (GigaPath)         TCGA 0.9878   CPTAC 0.9593
 Gated ABMIL (GigaPath)   TCGA 0.9848   CPTAC 0.9046
 MeanPool MLP (GigaPath)  TCGA 0.9807   CPTAC 0.9391
 ```
 
-(The "TCGA" column here is the checkpoint's validation AUC; the test-set AUCs are in
-the table above. Same models, different split.)
+The `TCGA` values printed by this script are checkpoint validation AUCs. Held-out TCGA test AUCs are reported in the results table above.
 
 ---
 
 ## Data
 
-The embeddings are too large for git and are hosted separately.
+Large embedding files are hosted separately from the Git repository.
 
-**Google Drive:** https://drive.google.com/drive/folders/1Bt8cffqrvFw-DYbN3ijev-PlaqjtucIp?usp=sharing (anyone with the link)
+**Precomputed embeddings:** [Google Drive](https://drive.google.com/drive/folders/1Bt8cffqrvFw-DYbN3ijev-PlaqjtucIp?usp=sharing)
 
-Files needed (place all in `<base>/embeddings/`):
+Place the downloaded files under `<base>/embeddings/`:
 
-| File | Size | What it is |
-|---|---|---|
+| File | Size | Description |
+|---|---:|---|
 | `gigapath_embeddings.h5` | 25 GB | TCGA GigaPath tile embeddings (1536-dim) |
 | `classical_embeddings.h5` | 6.7 GB | TCGA handcrafted features (404-dim) |
 | `cptac_gigapath_v2.h5` | 1.8 GB | CPTAC GigaPath embeddings (5x) |
-| `labels.csv` | - | TCGA slide labels |
-| `cptac_labels_v2.csv` | - | CPTAC slide labels |
+| `labels.csv` | — | TCGA slide labels |
+| `cptac_labels_v2.csv` | — | CPTAC slide labels |
 
-To verify only the CPTAC numbers you need just `cptac_gigapath_v2.h5` and
-`cptac_labels_v2.csv` plus the checkpoints (already in the repo).
+To reproduce only the CPTAC inference numbers, `cptac_gigapath_v2.h5` and `cptac_labels_v2.csv` are sufficient together with the checkpoints already included in the repository.
 
-The raw WSIs are not redistributed. TCGA slides are at the GDC Data Portal
-(projects TCGA-LUAD, TCGA-LUSC); CPTAC slides are at TCIA (CPTAC-LUAD, CPTAC-LSCC).
+Raw WSIs are not redistributed. TCGA slides are available from the **NCI Genomic Data Commons** (`TCGA-LUAD`, `TCGA-LUSC`), and CPTAC slides are available through **The Cancer Imaging Archive** (`CPTAC-LUAD`, `CPTAC-LSCC`).
 
 ---
 
-## Repository layout
+## Repository structure
 
-```
+```text
 project/
-  data/
-    dataset.py            MIL dataset, 500-tile subsample (redrawn each epoch)
-    splits.py             patient-level stratified splits
-  models/
-    model.py              ABMIL, GatedABMIL, MeanPoolMLP (input 1536, hidden 512)
-  train.py                train GigaPath MIL models
-  train_classical.py      XGBoost, RBF-SVM, MLP, PCA+SVM, BoVW
-  train_intermediate.py   ResNet18-cap MIL, MeanPool MLP
-  evaluate.py             test-set metrics for any trained model
-  cptac_inference.py      zero-shot CPTAC evaluation (loads a checkpoint)
-  bootstrap_ci.py         1000-sample bootstrap confidence intervals
-  learning_curve.py       AUC vs training set size (3 seeds)
-  counterfactual_tile_removal.py   attention-vs-random tile removal
-  attention_stats.py      attention entropy / concentration
-  attention_heatmap.py    per-slide attention overlays
-  make_ieee_figures.py    regenerate all paper figures
-  make_cptac_figures.py   CPTAC ROC + comparison figures
-  cptac_download_and_extract.py    CPTAC raw -> embeddings (needs GPU + GigaPath)
-  configs/                model/training configs
-  splits/                 the exact train/val/test CSVs used
-  results/
-    checkpoints/          trained model weights (.pt) -- shipped in the repo
-    logs/                 per-model results.json + training history
-    figures/              all generated figures (png + pdf)
-  environment.yml         full conda environment (GPU)
-  requirements.txt        pip requirements
+├── data/
+│   ├── dataset.py                  # MIL datasets and HDF5 loading
+│   └── splits.py                   # patient-level split generation
+├── models/
+│   └── model.py                    # ABMIL, Gated ABMIL, MeanPool MLP
+├── train.py                        # GigaPath MIL training
+├── train_classical.py              # classical feature baselines
+├── train_intermediate.py           # intermediate representation baselines
+├── evaluate.py                     # held-out test evaluation
+├── cptac_inference.py              # external CPTAC evaluation
+├── bootstrap_ci.py                 # bootstrap confidence intervals
+├── learning_curve.py               # performance vs training-set size
+├── counterfactual_tile_removal.py  # attention perturbation analysis
+├── attention_stats.py              # attention concentration statistics
+├── attention_heatmap.py            # spatial attention visualization
+├── make_ieee_figures.py            # publication-style figure generation
+├── cptac_download_and_extract.py   # CPTAC WSI → GigaPath embeddings
+├── splits/                         # exact train/validation/test definitions
+├── results/
+│   ├── checkpoints/                # trained model weights
+│   ├── logs/                       # metrics and training histories
+│   └── figures/                    # generated analysis figures
+├── REPRODUCE.md                    # detailed reproducibility guide
+├── environment.yml
+└── requirements.txt
 ```
 
 ---
 
-## Paths
+## Data paths
 
-All scripts read the data root from the `LUNG_WSI_DATA` environment variable,
-defaulting to `~/research_data` if unset. The root must contain `embeddings/` and
-`project/`. Set it once per shell:
+All scripts use the `LUNG_WSI_DATA` environment variable as the experiment-data root and fall back to `~/research_data` when it is not set.
+
+Expected layout:
+
+```text
+<base>/
+├── embeddings/
+└── project/
+```
+
+Set the path once per shell:
 
 ```bash
 export LUNG_WSI_DATA=/path/to/base
@@ -175,13 +209,6 @@ export LUNG_WSI_DATA=/path/to/base
 
 ---
 
-## Method summary
+## License
 
-- **Tiles:** 224x224 at 10x, background/pen-mark filtered. ~4.1M tiles over 1,025 slides.
-- **Features:** GigaPath tile encoder (1536-dim, frozen) vs handcrafted LBP+GLCM+HOG (404-dim).
-- **Aggregation:** mean-pool, attention MIL (ABMIL), gated attention MIL.
-- **Splits:** patient-level, no patient in more than one split (no leakage).
-- **Training:** AdamW (lr 1e-4, wd 1e-4), cosine schedule, early stop on val AUC.
-  500 tiles/slide subsampled per epoch (redrawn each epoch); all tiles used at test time.
-
-See the paper and `REPRODUCE.md` for full detail.
+Released under the [MIT License](LICENSE). The code may be used, modified, and redistributed, including for commercial purposes, subject to the license terms.
