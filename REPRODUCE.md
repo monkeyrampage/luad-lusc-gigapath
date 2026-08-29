@@ -21,7 +21,7 @@ Throughout, `--tag full` means the real 1,025-slide run (what the paper reports)
 
 ### 0.1 Data layout
 
-Scripts read the data root from the `DSAI543_DATA` environment variable. The root
+Scripts read the data root from the `LUNG_WSI_DATA` environment variable. The root
 must contain `embeddings/` and `project/`:
 
 ```
@@ -38,7 +38,7 @@ must contain `embeddings/` and `project/`:
 Embeddings are on Google Drive (link in README). Set the root once per shell:
 
 ```bash
-export DSAI543_DATA=/path/to/base
+export LUNG_WSI_DATA=/path/to/base
 ```
 
 If unset, scripts fall back to `~/research_data`.
@@ -78,14 +78,14 @@ inference can read them), and the generated outputs land fresh:
 ```bash
 # build the sandbox once
 mkdir -p ~/repro_base/project
-ln -s "$DSAI543_DATA/embeddings" ~/repro_base/embeddings
-cp -r "$DSAI543_DATA/project/"* ~/repro_base/project/
+ln -s "$LUNG_WSI_DATA/embeddings" ~/repro_base/embeddings
+cp -r "$LUNG_WSI_DATA/project/"* ~/repro_base/project/
 rm -rf ~/repro_base/project/results
 mkdir -p ~/repro_base/project/results
-cp -r "$DSAI543_DATA/project/results/checkpoints" ~/repro_base/project/results/checkpoints
+cp -r "$LUNG_WSI_DATA/project/results/checkpoints" ~/repro_base/project/results/checkpoints
 
 # run everything pointed at the sandbox
-export DSAI543_DATA=~/repro_base
+export LUNG_WSI_DATA=~/repro_base
 cd ~/repro_base/project
 ```
 
@@ -93,7 +93,7 @@ Now any command below writes into `~/repro_base/project/results/`, leaving the r
 repo untouched. Diff the new `results/logs/.../results.json` against the committed
 ones to confirm they match.
 
-To run against the real repo instead, just keep `DSAI543_DATA` pointed at the real
+To run against the real repo instead, just keep `LUNG_WSI_DATA` pointed at the real
 base and `cd` into the real `project/`.
 
 ### 1.2 CPTAC external validation (fastest check)
@@ -287,7 +287,7 @@ git clone https://github.com/monkeyrampage/luad-lusc-gigapath.git project
 conda create -n tcga_eval python=3.10 -y && conda activate tcga_eval
 pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install numpy h5py scikit-learn matplotlib xgboost
-export DSAI543_DATA=$(pwd)/..      # parent holding project/ and embeddings/
+export LUNG_WSI_DATA=$(pwd)/..      # parent holding project/ and embeddings/
 cd project && python3 cptac_inference.py --all-models
 # -> ABMIL CPTAC AUC 0.9593, matching the paper
 ```

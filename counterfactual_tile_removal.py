@@ -55,7 +55,7 @@ rcParams.update({
 sys.path.insert(0, os.path.dirname(__file__))
 from models.model import ABMIL
 
-BASE_DIR   = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR   = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 GP_H5      = os.path.join(BASE_DIR, "embeddings", "gigapath_embeddings.h5")
 CKPT_PATH  = os.path.join(BASE_DIR, "project", "results",
                            "checkpoints", "abmil_full", "best.pt")

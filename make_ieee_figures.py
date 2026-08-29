@@ -25,7 +25,7 @@ from PIL import Image
 import h5py
 import torch
 
-sys.path.insert(0, os.path.join(os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data")), "project"))
+sys.path.insert(0, os.path.join(os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data")), "project"))
 from models.model import ABMIL, GatedABMIL, MeanPoolMLP
 
 # ─── IEEE style defaults ───────────────────────────────────────────────────────
@@ -75,7 +75,7 @@ MODEL_LABELS = {
     "xgboost":       "XGBoost",
 }
 
-BASE_DIR   = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR   = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 RESULTS    = os.path.join(BASE_DIR, "project", "results")
 LOGS       = os.path.join(RESULTS, "logs")
 FIGS       = os.path.join(RESULTS, "figures")

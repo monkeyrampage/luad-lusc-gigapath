@@ -1,7 +1,7 @@
 """
 evaluate.py
 -----------
-Generates all evaluation outputs needed for project submission.
+Generates all evaluation outputs needed for benchmark evaluation.
 Run after training all models.
 
 Outputs (in results/figures/):
@@ -32,7 +32,7 @@ from sklearn.decomposition import PCA
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-BASE_DIR    = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR    = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 RESULTS_DIR = os.path.join(BASE_DIR, "project", "results")
 FIGURES_DIR = os.path.join(RESULTS_DIR, "figures")
 os.makedirs(FIGURES_DIR, exist_ok=True)
