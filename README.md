@@ -1,5 +1,7 @@
 # Whole-Slide Lung Cancer Subtyping with GigaPath
 
+[![Quality checks](https://github.com/monkeyrampage/luad-lusc-gigapath/actions/workflows/quality.yml/badge.svg)](https://github.com/monkeyrampage/luad-lusc-gigapath/actions/workflows/quality.yml)
+
 **LUAD vs LUSC classification from whole-slide histopathology using pathology foundation-model embeddings and multiple-instance learning.**
 
 This repository benchmarks handcrafted image features against **GigaPath** representations for distinguishing lung adenocarcinoma (LUAD) from lung squamous cell carcinoma (LUSC). Models are trained on TCGA and evaluated on an external CPTAC cohort without retraining.
