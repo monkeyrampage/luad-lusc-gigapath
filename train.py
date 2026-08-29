@@ -35,7 +35,7 @@ from data.dataset import get_gigapath_loaders, collate_bags
 from models.model import get_model, count_parameters
 
 # ─── Paths ────────────────────────────────────────────────────────────────────
-BASE_DIR    = os.path.join(os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data")), "project")
+BASE_DIR    = os.path.join(os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data")), "project")
 SPLITS_DIR  = os.path.join(BASE_DIR, "splits")
 RESULTS_DIR = os.path.join(BASE_DIR, "results")
 

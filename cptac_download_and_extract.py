@@ -40,7 +40,7 @@ logging.basicConfig(
     ]
 )
 
-BASE_DIR   = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR   = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 EMBED_DIR  = os.path.join(BASE_DIR, "embeddings")
 TMP_DIR    = os.path.join(BASE_DIR, "cptac_tmp")
 GP_H5      = os.path.join(EMBED_DIR, "cptac_gigapath_v2.h5")

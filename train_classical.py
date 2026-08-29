@@ -2,7 +2,7 @@
 train_classical.py
 ------------------
 Trains classical feature baselines on HOG+LBP+GLCM embeddings.
-  1. RBF-SVM  (Baseline 1 from proposal)
+  1. RBF-SVM
   2. Classical MLP
 
 Usage:
@@ -31,7 +31,7 @@ from sklearn.pipeline import Pipeline
 sys.path.insert(0, os.path.dirname(__file__))
 from data.dataset import load_split_csv
 
-BASE_DIR    = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR    = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 SPLITS_DIR  = os.path.join(BASE_DIR, "project", "splits")
 RESULTS_DIR = os.path.join(BASE_DIR, "project", "results")
 CL_H5       = os.path.join(BASE_DIR, "embeddings", "classical_embeddings.h5")

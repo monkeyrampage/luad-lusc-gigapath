@@ -37,7 +37,7 @@ from sklearn.metrics import roc_auc_score, accuracy_score, f1_score
 sys.path.insert(0, os.path.dirname(__file__))
 from models.model import ABMIL, MeanPoolMLP
 
-BASE_DIR   = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR   = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 GP_H5      = os.path.join(BASE_DIR, "embeddings", "gigapath_embeddings.h5")
 CL_H5      = os.path.join(BASE_DIR, "embeddings", "classical_embeddings.h5")
 SPLITS_DIR = os.path.join(BASE_DIR, "project", "splits")

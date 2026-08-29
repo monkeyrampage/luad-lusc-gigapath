@@ -17,7 +17,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-BASE_DIR    = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR    = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 GP_H5       = os.path.join(BASE_DIR, "embeddings", "gigapath_embeddings.h5")
 CL_H5       = os.path.join(BASE_DIR, "embeddings", "classical_embeddings.h5")
 MAX_TILES   = 500   # training-time subsample cap

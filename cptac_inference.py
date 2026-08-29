@@ -46,7 +46,7 @@ rcParams.update({
 sys.path.insert(0, os.path.dirname(__file__))
 from models.model import ABMIL, GatedABMIL, MeanPoolMLP
 
-BASE_DIR   = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR   = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 EMBED_DIR  = os.path.join(BASE_DIR, "embeddings")
 CPTAC_H5   = os.path.join(EMBED_DIR, "cptac_gigapath_v2.h5")
 CPTAC_CSV  = os.path.join(EMBED_DIR, "cptac_labels_v2.csv")

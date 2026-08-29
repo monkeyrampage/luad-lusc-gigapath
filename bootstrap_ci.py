@@ -24,7 +24,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score, accuracy_score, f1_score
 
-BASE_DIR    = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR    = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 RESULTS_DIR = os.path.join(BASE_DIR, "project", "results")
 FIGURES_DIR = os.path.join(RESULTS_DIR, "figures")
 os.makedirs(FIGURES_DIR, exist_ok=True)

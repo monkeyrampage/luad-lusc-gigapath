@@ -31,7 +31,7 @@ rcParams.update({
     "grid.alpha":      0.3,
 })
 
-BASE_DIR  = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR  = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 LOGS      = os.path.join(BASE_DIR, "project", "results", "logs")
 IEEE_DIR  = os.path.join(BASE_DIR, "project", "results", "figures", "ieee")
 os.makedirs(IEEE_DIR, exist_ok=True)

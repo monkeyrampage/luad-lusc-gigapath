@@ -15,10 +15,10 @@ import matplotlib.cm as cm
 from PIL import Image
 import h5py
 
-sys.path.insert(0, os.path.join(os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data")), "project"))
+sys.path.insert(0, os.path.join(os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data")), "project"))
 from models.model import ABMIL
 
-BASE_DIR  = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR  = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 GP_H5     = os.path.join(BASE_DIR, "embeddings", "gigapath_embeddings.h5")
 CKPT_PATH = os.path.join(BASE_DIR, "project", "results",
                          "checkpoints", "abmil_full", "best.pt")

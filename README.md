@@ -2,7 +2,7 @@
 
 Benchmark of handcrafted features against the GigaPath pathology foundation model
 for classifying lung adenocarcinoma (LUAD) vs lung squamous cell carcinoma (LUSC)
-from whole-slide images (WSIs). DSAI 543, Bogazici University.
+from whole-slide images (WSIs).
 
 The headline result: attention-based MIL (ABMIL) over GigaPath embeddings reaches
 **AUC 0.988** on the TCGA test set and **0.959** on an external CPTAC cohort with no
@@ -87,7 +87,7 @@ pip install torch --index-url https://download.pytorch.org/whl/cpu
 pip install numpy h5py scikit-learn matplotlib
 
 # 4. point at the data root and run
-export DSAI543_DATA=/path/to/base      # the folder containing embeddings/ and project/
+export LUNG_WSI_DATA=/path/to/base      # the folder containing embeddings/ and project/
 cd project
 python3 cptac_inference.py --all-models
 ```
@@ -165,12 +165,12 @@ project/
 
 ## Paths
 
-All scripts read the data root from the `DSAI543_DATA` environment variable,
+All scripts read the data root from the `LUNG_WSI_DATA` environment variable,
 defaulting to `~/research_data` if unset. The root must contain `embeddings/` and
 `project/`. Set it once per shell:
 
 ```bash
-export DSAI543_DATA=/path/to/base
+export LUNG_WSI_DATA=/path/to/base
 ```
 
 ---

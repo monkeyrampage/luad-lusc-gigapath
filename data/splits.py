@@ -25,7 +25,7 @@ import os
 import random
 from collections import defaultdict
 
-BASE_DIR   = os.environ.get("DSAI543_DATA", os.path.expanduser("~/research_data"))
+BASE_DIR   = os.environ.get("LUNG_WSI_DATA", os.path.expanduser("~/research_data"))
 LABELS_CSV = os.path.join(BASE_DIR, "embeddings", "labels.csv")
 SPLITS_DIR = os.path.join(BASE_DIR, "project", "splits")
 os.makedirs(SPLITS_DIR, exist_ok=True)
