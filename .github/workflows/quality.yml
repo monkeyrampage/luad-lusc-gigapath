@@ -1,0 +1,59 @@
+name: Quality checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Compile Python sources
+        run: python -m compileall -q .
+
+      - name: Check public-repo hygiene
+        shell: python
+        run: |
+          from pathlib import Path
+
+          roots = [Path("README.md"), Path("REPRODUCE.md"), Path("environment.yml")]
+          roots.extend(Path(".").glob("*.py"))
+          roots.extend(Path("data").glob("*.py"))
+          roots.extend(Path("models").glob("*.py"))
+
+          forbidden = [
+              "DSAI" + "543",
+              "DSAI" + " 543",
+              "DSAI" + "545",
+              "DSAI" + " 545",
+              "Bog" + "azici",
+              "Boğ" + "aziçi",
+              "DSAI" + "543_DATA",
+              "ktur" + "kmeneli",
+          ]
+
+          failures = []
+          for path in roots:
+              if not path.exists() or not path.is_file():
+                  continue
+              text = path.read_text(encoding="utf-8", errors="ignore")
+              for token in forbidden:
+                  if token in text:
+                      failures.append(f"{path}: contains stale public-repo token {token!r}")
+
+          if failures:
+              raise SystemExit("\n".join(failures))
+
+          print("Public-repo hygiene check passed.")
