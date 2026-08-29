@@ -2,7 +2,7 @@
 train_classical.py
 ------------------
 Trains classical feature baselines on HOG+LBP+GLCM embeddings.
-  1. RBF-SVM  (RBF-SVM baseline)
+  1. RBF-SVM
   2. Classical MLP
 
 Usage:
