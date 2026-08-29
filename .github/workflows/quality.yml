@@ -23,15 +23,63 @@ jobs:
       - name: Compile Python sources
         run: python -m compileall -q .
 
-      - name: Check public-repo hygiene
+      - name: Check public-repo hygiene and script layout
         shell: python
         run: |
           from pathlib import Path
 
-          roots = [Path("README.md"), Path("REPRODUCE.md"), Path("environment.yml")]
-          roots.extend(Path(".").glob("*.py"))
-          roots.extend(Path("data").glob("*.py"))
-          roots.extend(Path("models").glob("*.py"))
+          expected_scripts = [
+              "scripts/training/train.py",
+              "scripts/training/train_classical.py",
+              "scripts/training/train_intermediate.py",
+              "scripts/evaluation/evaluate.py",
+              "scripts/evaluation/eval_checkpoint.py",
+              "scripts/evaluation/cptac_inference.py",
+              "scripts/evaluation/bootstrap_ci.py",
+              "scripts/evaluation/learning_curve.py",
+              "scripts/analysis/attention_stats.py",
+              "scripts/analysis/attention_heatmap.py",
+              "scripts/analysis/counterfactual_tile_removal.py",
+              "scripts/figures/make_attention_grid.py",
+              "scripts/figures/make_cptac_figures.py",
+              "scripts/figures/make_disagreement_attention_grid_v2.py",
+              "scripts/figures/make_disagreement_grid_v3.py",
+              "scripts/figures/make_ieee_figures.py",
+              "scripts/data_prep/cptac_download_and_extract.py",
+          ]
+
+          package_markers = [
+              "scripts/__init__.py",
+              "scripts/training/__init__.py",
+              "scripts/evaluation/__init__.py",
+              "scripts/analysis/__init__.py",
+              "scripts/figures/__init__.py",
+              "scripts/data_prep/__init__.py",
+          ]
+
+          legacy_root_scripts = [Path(path).name for path in expected_scripts]
+
+          failures = []
+
+          for path in expected_scripts + package_markers:
+              if not Path(path).is_file():
+                  failures.append(f"missing expected repository path: {path}")
+
+          root_python = sorted(path.name for path in Path(".").glob("*.py"))
+          if root_python:
+              failures.append(
+                  "root-level Python scripts are not allowed; place them under scripts/: "
+                  + ", ".join(root_python)
+              )
+
+          for name in legacy_root_scripts:
+              if Path(name).exists():
+                  failures.append(f"legacy root-level script still exists: {name}")
+
+          text_paths = [Path("README.md"), Path("REPRODUCE.md"), Path("environment.yml")]
+          text_paths.extend(Path("data").rglob("*.py"))
+          text_paths.extend(Path("models").rglob("*.py"))
+          text_paths.extend(Path("scripts").rglob("*.py"))
 
           forbidden = [
               "DSAI" + "543",
@@ -44,16 +92,28 @@ jobs:
               "ktur" + "kmeneli",
           ]
 
-          failures = []
-          for path in roots:
+          stale_invocations = []
+          for name in legacy_root_scripts:
+              stale_invocations.extend([f"python3 {name}", f"python {name}"])
+
+          for path in text_paths:
               if not path.exists() or not path.is_file():
                   continue
               text = path.read_text(encoding="utf-8", errors="ignore")
               for token in forbidden:
                   if token in text:
                       failures.append(f"{path}: contains stale public-repo token {token!r}")
+              for invocation in stale_invocations:
+                  if invocation in text:
+                      failures.append(f"{path}: contains stale root-level command {invocation!r}")
+
+          eval_checkpoint = Path("scripts/evaluation/eval_checkpoint.py").read_text(
+              encoding="utf-8", errors="ignore"
+          )
+          if "from train import" in eval_checkpoint:
+              failures.append("eval_checkpoint.py still imports train from the old root location")
 
           if failures:
               raise SystemExit("\n".join(failures))
 
-          print("Public-repo hygiene check passed.")
+          print("Repository hygiene and script-layout checks passed.")
